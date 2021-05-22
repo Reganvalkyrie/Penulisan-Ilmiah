@@ -1,0 +1,360 @@
+<template>
+  <div>
+    <div class="w-25 p-2 m-4 d-flex center">
+      <b-form-input
+        class="border border-danger hero-name"
+        v-model="text"
+        placeholder="Enter Hero name"
+      ></b-form-input>
+      <b-button class="m-2" variant="danger">Search</b-button>
+    </div>
+    <div class="flex toggle-container">
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Carry
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Nuker
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Initiator
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Disabler
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Durable
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Escape
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Support
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Pusher
+      </button>
+      <button
+        @click="myToggleFunction($event)"
+        class="role-toggle-button px-2 m-2"
+      >
+        Jungler
+      </button>
+    </div>
+
+    <div class="mt-2">Value: {{ text }}</div>
+    <div class="card-section">
+      <div v-for="hero in listHero" v-bind:key="hero.id">
+        <div>
+          <b-card>
+            <img
+              class="hero mb-0"
+              :src="'https://api.opendota.com' + hero.img"
+            />
+
+            <b-card-text style="height: 140px">
+              <ul>
+                <li class="hero-card-name">{{ hero.localized_name }}</li>
+                <!-- <li>{{ hero.roles }}</li> -->
+                <li class="role-container">
+                  <div class="inline" v-for="role in hero.roles" :key="role">
+                    <p v-if="role == 'Carry'" class="hero-role carry">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Nuker'" class="hero-role nuker">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Initiator'" class="hero-role initiator">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Disabler'" class="hero-role disabler">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Durable'" class="hero-role durable">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Escape'" class="hero-role escape">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Support'" class="hero-role support">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Pusher'" class="hero-role pusher">
+                      {{ role }}
+                    </p>
+                    <p v-if="role == 'Jungler'" class="hero-role jungler">
+                      {{ role }}
+                    </p>
+                  </div>
+                </li>
+                <li class="mt-3">
+                  <ul>
+                    <li class="attribute-list text-danger">
+                      <span class="attribute-span">
+                        STR : {{ hero.base_str }} + {{ hero.str_gain }}</span
+                      >
+                    </li>
+                    <li class="attribute-list text-success">
+                      <span class="attribute-span">
+                        AGI : {{ hero.base_agi }} + {{ hero.agi_gain }}</span
+                      >
+                    </li>
+                    <li class="attribute-list text-primary">
+                      <span class="attribute-span">
+                        INT : {{ hero.base_int }} + {{ hero.int_gain }}</span
+                      >
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </b-card-text>
+
+            <b-button
+              id="show-btn"
+              @click="showMatchModal(hero.id)"
+              class="mt-5 px-3 py-1 rounded-pill"
+              variant="danger"
+              >Find Match</b-button
+            >
+            <b-button
+              id="show-btn"
+              @click="showPlayerModal(hero.id)"
+              class="mt-5 mx-2 px-3 py-1 rounded-pill"
+              variant="danger"
+              >Find Top Player</b-button
+            >
+          </b-card>
+        </div>
+      </div>
+    </div>
+    <b-modal ref="player-modal" hide-footer title="Using Component Methods">
+      <div class="player-modal-style d-block text-center">
+        <p
+          v-for="heroPlayer in listHeroPlayer"
+          v-bind:key="heroPlayer.account_id"
+        >
+          player id : {{ heroPlayer.account_id }} Matches:{{
+            heroPlayer.games_played
+          }}
+          Wins:{{ heroPlayer.wins }}
+        </p>
+      </div>
+      <b-button
+        class="mt-3"
+        variant="outline-danger"
+        block
+        @click="hidePlayerModal"
+        >Close Me</b-button
+      >
+    </b-modal>
+    <b-modal ref="match-modal" hide-footer title="Using Component Methods">
+      <div class="match-modal-style d-block text-center">
+        <p v-for="heroMatch in listHeroMatch" :key="heroMatch.match_id">
+          match_id : {{ heroMatch.match_id }}
+        </p>
+      </div>
+      <b-button
+        class="mt-3"
+        variant="outline-danger"
+        block
+        @click="hideMatchModal"
+        >Close Me</b-button
+      >
+    </b-modal>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+export default {
+  name: "showCard",
+  components: {},
+  data() {
+    return {
+      listHeroPlayer: undefined,
+      listHeroMatch: undefined,
+      listHero: undefined,
+      isActive: false,
+    };
+  },
+
+  methods: {
+    myToggleFunction: function (event) {
+      let button = event.target;
+      button.classList.toggle("active");
+    },
+
+    hidePlayerModal() {
+      this.$refs["player-modal"].hide();
+    },
+    showPlayerModal(id) {
+      this.$refs["player-modal"].show();
+      axios
+        .get(`https://api.opendota.com/api/heroes/${id}/players`)
+        .then((response) => (this.listHeroPlayer = response.data));
+    },
+    hideMatchModal() {
+      this.$refs["match-modal"].hide();
+    },
+    showMatchModal(id) {
+      axios
+        .get(`https://api.opendota.com/api/heroes/${id}/matches`)
+        .then((response) => (this.listHeroMatch = response.data));
+      this.$refs["match-modal"].show();
+    },
+  },
+  computed: {
+    getImageUrl(heroId) {
+      let url = "https://api.opendota.com" + heroId;
+      return url;
+    },
+  },
+  mounted() {
+    axios
+      .get("https://api.opendota.com/api/heroStats")
+      .then((response) => (this.listHero = response.data));
+  },
+};
+</script>
+
+<style scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.flex {
+  display: flex;
+}
+.toggle-container {
+  flex-wrap: wrap;
+  width: 500px;
+  height: 100px;
+  /* background: #ee9ca7; */
+}
+.card-section {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+.active {
+  background-color: aqua;
+}
+.hero-card-name {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: 800;
+}
+.inline {
+  box-sizing: border-box;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding-bottom: 5px;
+}
+.role-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 300px;
+  height: 58px;
+}
+
+.carry {
+  background: rgb(255, 0, 0);
+}
+.nuker {
+  background: rgb(21, 255, 0);
+}
+.initiator {
+  background: rgb(0, 110, 255);
+}
+.disabler {
+  background: #008080;
+}
+.durable {
+  background: rgb(219, 107, 195);
+}
+.escape {
+  background: rgb(255, 255, 255);
+}
+.support {
+  background: rgb(255, 251, 0);
+}
+.pusher {
+  background: rgb(255, 0, 212);
+}
+.jungler {
+  background: rgb(255, 115, 0);
+}
+.hero-role {
+  width: 75px;
+}
+.hero {
+  border-radius: 10px;
+  width: 300px;
+  height: 200px;
+}
+.hero-name {
+  min-width: 200px;
+}
+
+.card {
+  border-radius: 20px;
+  box-shadow: 0 13px 32px 0 rgb(0, 0, 0);
+  padding: 16px;
+  background: #ee9ca7;
+  background: -webkit-linear-gradient(to right, #ffdde1, #ee9ca7);
+  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+
+  margin-top: 25px;
+  width: 350px;
+  height: 450px;
+}
+.card-img {
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+}
+ul {
+  list-style-type: none;
+}
+.attribute-list {
+  position: relative;
+  list-style-type: disc;
+  font-weight: 800;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-left: 100px;
+}
+.attribute-span {
+  position: relative;
+  margin-left: -100px;
+}
+
+li {
+  color: black;
+}
+</style>
