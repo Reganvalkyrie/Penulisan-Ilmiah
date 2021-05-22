@@ -293,7 +293,7 @@ export default {
   background: rgb(0, 110, 255);
 }
 .disabler {
-  background: #008080;
+  background: #a6f0f0;
 }
 .durable {
   background: rgb(219, 107, 195);
