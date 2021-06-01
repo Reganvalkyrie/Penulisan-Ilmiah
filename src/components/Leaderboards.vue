@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="filterPlayer('0')" class="leaderboard-region-button">
+    <!-- <button @click="filterPlayer('0')" class="leaderboard-region-button">
       America
     </button>
     <button @click="filterPlayer('1')" class="leaderboard-region-button">
@@ -11,7 +11,39 @@
     </button>
     <button @click="filterPlayer('3')" class="leaderboard-region-button">
       China
-    </button>
+    </button> -->
+    <div>
+      <b-tabs
+        v-model="tabIndex"
+        pills
+        card
+        end
+        align="center"
+        content-class="mt-3"
+      >
+        <b-tab
+          :title-link-class="linkClass(0)"
+          @click="filterPlayer('0')"
+          title="America"
+          active
+        ></b-tab>
+        <b-tab
+          :title-link-class="linkClass(1)"
+          @click="filterPlayer('1')"
+          title="SE Asia"
+        ></b-tab>
+        <b-tab
+          :title-link-class="linkClass(2)"
+          @click="filterPlayer('2')"
+          title="Europe"
+        ></b-tab>
+        <b-tab
+          :title-link-class="linkClass(3)"
+          @click="filterPlayer('3')"
+          title="China"
+        ></b-tab>
+      </b-tabs>
+    </div>
     <tr>
       <th>Rank</th>
       <th>Display Pict.</th>
@@ -42,9 +74,17 @@ export default {
   data() {
     return {
       listPlayer: undefined,
+      tabIndex: 0,
     };
   },
   methods: {
+    linkClass(idx) {
+      if (this.tabIndex === idx) {
+        return ["mx-3", "bg-danger", "text-light"];
+      } else {
+        return ["mx-3", "bg-secondary", "text-dark"];
+      }
+    },
     filterPlayer(region) {
       axios
         .get(
