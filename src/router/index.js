@@ -21,6 +21,11 @@ const routes = [
     name: "heroes",
     component: () => import("@/views/Heroes.vue"),
   },
+  {
+    path: "/leaderboard",
+    name: "leaderboard",
+    component: () => import("@/views/Leaderboard.vue"),
+  },
 ];
 
 const router = new VueRouter({

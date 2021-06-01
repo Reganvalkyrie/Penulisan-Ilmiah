@@ -9,10 +9,7 @@
       <b-button class="m-2" variant="danger">Search</b-button>
     </div>
     <div class="flex toggle-container">
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
+      <button @click="filterHero('Carry')" class="role-toggle-button px-2 m-2">
         Carry
       </button>
       <button
@@ -152,7 +149,8 @@
     </div>
     <b-modal ref="player-modal" hide-footer title="Using Component Methods">
       <div class="player-modal-style d-block text-center">
-        <p
+        <div
+          class="jarak"
           v-for="heroPlayer in listHeroPlayer"
           v-bind:key="heroPlayer.account_id"
         >
@@ -160,7 +158,7 @@
             heroPlayer.games_played
           }}
           Wins:{{ heroPlayer.wins }}
-        </p>
+        </div>
       </div>
       <b-button
         class="mt-3"
@@ -173,7 +171,21 @@
     <b-modal ref="match-modal" hide-footer title="Using Component Methods">
       <div class="match-modal-style d-block text-center">
         <p v-for="heroMatch in listHeroMatch" :key="heroMatch.match_id">
-          match_id : {{ heroMatch.match_id }}
+          Match_id : {{ heroMatch.match_id }} Duration :
+          {{ heroMatch.duration }} league : {{ heroMatch.league_name }} Result :
+          <span
+            class="jarak"
+            v-if="heroMatch.radiant_win == true && heroMatch.radiant == true"
+            >Win</span
+          >
+          <span
+            class="jarak"
+            v-else-if="
+              heroMatch.radiant_win == false && heroMatch.radiant == false
+            "
+            >Win</span
+          >
+          <span class="jarak" v-else>Lose</span>
         </p>
       </div>
       <b-button
@@ -206,7 +218,13 @@ export default {
       let button = event.target;
       button.classList.toggle("active");
     },
-
+    filterHero(role) {
+      let newListHero = this.listHero.filter((hero) => {
+        return hero.roles.include(role);
+      });
+      this.listHero = newListHero;
+      console.log(this.listHero);
+    },
     hidePlayerModal() {
       this.$refs["player-modal"].hide();
     },
@@ -231,7 +249,13 @@ export default {
       let url = "https://api.opendota.com" + heroId;
       return url;
     },
+    //  filteredHero(){
+    //    return this.listHero.roles
+    // .filter((hero)=>{
+    //  return hero.title.match(this.filterName);
+    // }
   },
+
   mounted() {
     axios
       .get("https://api.opendota.com/api/heroStats")
@@ -245,6 +269,9 @@ export default {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+.jarak {
+  margin: 5px;
 }
 .flex {
   display: flex;

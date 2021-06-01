@@ -7,7 +7,7 @@
       </div>
 
       <div class="menu-item">
-        <router-link to="/compare">Compare</router-link>
+        <router-link to="/leaderboard">Leaderboard</router-link>
       </div>
       <div class="menu-item"><router-link to="/about">About</router-link></div>
     </nav>
