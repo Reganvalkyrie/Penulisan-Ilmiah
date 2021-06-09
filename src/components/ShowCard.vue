@@ -284,6 +284,15 @@ export default {
       this.matchDetailId = matchId.toString();
       console.log(this.matchDetailId);
     },
+    compare(a, b) {
+      if (a.localized_name < b.localized_name) {
+        return -1;
+      }
+      if (a.localized_name > b.localized_name) {
+        return 1;
+      }
+      return 0;
+    },
   },
   computed: {
     getImageUrl(heroId) {
@@ -300,7 +309,7 @@ export default {
   mounted() {
     axios
       .get("https://api.opendota.com/api/heroStats")
-      .then((response) => (this.listHero = response.data));
+      .then((response) => (this.listHero = response.data.sort(this.compare)));
   },
 };
 </script>
