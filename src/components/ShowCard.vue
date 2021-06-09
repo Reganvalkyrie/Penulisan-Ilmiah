@@ -147,18 +147,26 @@
         </div>
       </div>
     </div>
-    <b-modal ref="player-modal" hide-footer title="Using Component Methods">
+    <b-modal
+      ref="player-modal"
+      size="md"
+      hide-footer
+      title="Using Component Methods"
+    >
       <div class="player-modal-style d-block text-center">
-        <div
-          class="jarak"
+        <tr>
+          <th>Player Id</th>
+          <th>Matches</th>
+          <th>Wins</th>
+        </tr>
+        <tr
           v-for="heroPlayer in listHeroPlayer"
           v-bind:key="heroPlayer.account_id"
         >
-          player id : {{ heroPlayer.account_id }} Matches:{{
-            heroPlayer.games_played
-          }}
-          Wins:{{ heroPlayer.wins }}
-        </div>
+          <td>{{ heroPlayer.account_id }}</td>
+          <td>{{ heroPlayer.games_played }}</td>
+          <td>{{ heroPlayer.wins }}</td>
+        </tr>
       </div>
       <b-button
         class="mt-3"
@@ -168,25 +176,44 @@
         >Close Me</b-button
       >
     </b-modal>
-    <b-modal ref="match-modal" hide-footer title="Using Component Methods">
-      <div class="match-modal-style d-block text-center">
-        <p v-for="heroMatch in listHeroMatch" :key="heroMatch.match_id">
-          Match_id : {{ heroMatch.match_id }} Duration :
-          {{ heroMatch.duration }} league : {{ heroMatch.league_name }} Result :
-          <span
-            class="jarak"
-            v-if="heroMatch.radiant_win == true && heroMatch.radiant == true"
-            >Win</span
-          >
-          <span
-            class="jarak"
-            v-else-if="
-              heroMatch.radiant_win == false && heroMatch.radiant == false
-            "
-            >Win</span
-          >
-          <span class="jarak" v-else>Lose</span>
-        </p>
+    <b-modal
+      ref="match-modal"
+      size="lg"
+      hide-footer
+      title="Player Matches"
+      body-bg-variant="dark"
+      header-bg-variant="warning"
+    >
+      <div class="text-light match-modal-style d-block text-center">
+        <tr>
+          <th>Match ID</th>
+          <th>League</th>
+          <th>Duration</th>
+          <th>Result</th>
+        </tr>
+        <tr v-for="heroMatch in listHeroMatch" :key="heroMatch.match_id">
+          <td>
+            <a @click="getMatchDetail(heroMatch.match_id)" href="">{{
+              heroMatch.match_id
+            }}</a>
+          </td>
+          <td>{{ heroMatch.league_name }}</td>
+          <td>{{ heroMatch.duration }}</td>
+          <td>
+            <span
+              class="jarak"
+              v-if="heroMatch.radiant_win == true && heroMatch.radiant == true"
+              >Win</span
+            ><span
+              class="jarak"
+              v-else-if="
+                heroMatch.radiant_win == false && heroMatch.radiant == false
+              "
+              >Win</span
+            >
+            <span class="jarak" v-else>Lose</span>
+          </td>
+        </tr>
       </div>
       <b-button
         class="mt-3"
@@ -210,6 +237,8 @@ export default {
       listHeroMatch: undefined,
       listHero: undefined,
       isActive: false,
+      matchDetail: undefined,
+      matchDetailId: undefined,
     };
   },
 
@@ -243,6 +272,18 @@ export default {
         .then((response) => (this.listHeroMatch = response.data));
       this.$refs["match-modal"].show();
     },
+    async getMatchDetail(matchId) {
+      this.getMatchId(matchId);
+
+      this.$router.push({
+        name: "/match-detail",
+        params: { id: this.matchDetailId },
+      });
+    },
+    getMatchId(matchId) {
+      this.matchDetailId = matchId.toString();
+      console.log(this.matchDetailId);
+    },
   },
   computed: {
     getImageUrl(heroId) {
@@ -270,12 +311,14 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 .jarak {
   margin: 5px;
 }
 .flex {
   display: flex;
 }
+
 .toggle-container {
   flex-wrap: wrap;
   width: 500px;
@@ -383,5 +426,10 @@ ul {
 
 li {
   color: black;
+}
+tr,
+th,
+td {
+  border: 2px solid;
 }
 </style>

@@ -26,6 +26,11 @@ const routes = [
     name: "leaderboard",
     component: () => import("@/views/Leaderboard.vue"),
   },
+  {
+    path: "/match-detail/:id",
+    name: "/match-detail",
+    component: () => import("@/views/MatchDetail.vue"),
+  },
 ];
 
 const router = new VueRouter({

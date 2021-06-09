@@ -88,7 +88,7 @@ export default {
     filterPlayer(region) {
       axios
         .get(
-          `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=${region}`
+          `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=${region}&take=100`
         )
         .then((response) => {
           this.listPlayer = response.data.players;
@@ -99,7 +99,7 @@ export default {
   mounted() {
     axios
       .get(
-        `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=0`
+        `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=0&take=100`
       )
       .then((response) => {
         this.listPlayer = response.data.players;
@@ -109,7 +109,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .leaderboard-region-button {
   padding-right: 10px;
   padding-left: 10px;

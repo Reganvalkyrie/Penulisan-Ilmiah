@@ -1,5 +1,14 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <p>
+      Hi !! My name is Regan Giri Karuna. I'm a student in Gunadarma University
+      and currently in 6th semester
+    </p>
+    <br />
+    <p>
+      this website is created using API from
+      <a href="https://docs.opendota.com/">OpenDota</a> and
+      <a href="https://docs.stratz.com/index.html">Stratz</a>
+    </p>
   </div>
 </template>
