@@ -1,5 +1,9 @@
 # dotadota
-
+```
+Welcome to pi saya :D dibuat sebagai syarat perkuliahan.
+masih sangat banyak kekurangan, mohon untuk saran yang membangun.
+Free to use.
+```
 ## Project setup
 ```
 npm install
