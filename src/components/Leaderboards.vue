@@ -44,26 +44,28 @@
         ></b-tab>
       </b-tabs>
     </div>
-    <tr>
-      <th>Rank</th>
-      <th>Display Pict.</th>
-      <th>Player ID</th>
-      <th>Player Name</th>
-    </tr>
-    <tr v-for="player in listPlayer" v-bind:key="player.steamId">
-      <td>{{ player.steamAccount.seasonLeaderboardRank }}</td>
-      <td>
-        <img
-          :src="
-            'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/' +
-            player.steamAccount.avatar
-          "
-          alt=""
-        />
-      </td>
-      <td>{{ player.steamAccount.id }}</td>
-      <td>{{ player.steamAccount.name }}</td>
-    </tr>
+    <div class="table-container">
+      <tr>
+        <th>Rank</th>
+        <th>Display Pict.</th>
+        <th>Player ID</th>
+        <th>Player Name</th>
+      </tr>
+      <tr v-for="player in listPlayer" v-bind:key="player.steamId">
+        <td>{{ player.steamAccount.seasonLeaderboardRank }}</td>
+        <td>
+          <img
+            :src="
+              'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/' +
+              player.steamAccount.avatar
+            "
+            alt=""
+          />
+        </td>
+        <td>{{ player.steamAccount.id }}</td>
+        <td>{{ player.steamAccount.name }}</td>
+      </tr>
+    </div>
   </div>
 </template>
 
@@ -88,7 +90,7 @@ export default {
     filterPlayer(region) {
       axios
         .get(
-          `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=${region}&take=100`
+          `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=${region}&take=19`
         )
         .then((response) => {
           this.listPlayer = response.data.players;
@@ -99,7 +101,7 @@ export default {
   mounted() {
     axios
       .get(
-        `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=0&take=100`
+        `https://api.stratz.com/api/v1/Player/seasonLeaderBoard?leaderBoardDivision=0&take=19`
       )
       .then((response) => {
         this.listPlayer = response.data.players;
@@ -110,6 +112,9 @@ export default {
 </script>
 
 <style scoped>
+* {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
 .leaderboard-region-button {
   padding-right: 10px;
   padding-left: 10px;
@@ -124,5 +129,11 @@ td {
   padding-right: 40px;
   padding-left: 40px;
   border: 1px solid;
+}
+.table-container {
+  position: relative;
+  display: block;
+  align-items: center;
+  transform: translateX(290px);
 }
 </style>

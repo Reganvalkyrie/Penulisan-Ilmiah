@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="content">
-      <h1>Your <strong>Dota 2</strong><br />Assistant</h1>
+      <h1>Your <strong>Dota 2</strong><br />Information</h1>
       <br />
     </div>
     <div class="body-content">
@@ -40,6 +40,7 @@ strong {
   width: 100%;
   height: auto;
 }
+
 img {
   width: fit-content;
   object-fit: cover;

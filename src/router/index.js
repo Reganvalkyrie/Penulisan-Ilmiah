@@ -31,6 +31,11 @@ const routes = [
     name: "/match-detail",
     component: () => import("@/views/MatchDetail.vue"),
   },
+  {
+    path: "/player-detail/:id",
+    name: "/player-detail",
+    component: () => import("@/views/PlayerDetail.vue"),
+  },
 ];
 
 const router = new VueRouter({

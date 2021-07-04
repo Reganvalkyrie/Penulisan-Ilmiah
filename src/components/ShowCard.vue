@@ -3,68 +3,14 @@
     <div class="w-25 p-2 m-4 d-flex center">
       <b-form-input
         class="border border-danger hero-name"
-        v-model="text"
+        input-type="text"
+        v-model="search"
         placeholder="Enter Hero name"
       ></b-form-input>
-      <b-button class="m-2" variant="danger">Search</b-button>
-    </div>
-    <div class="flex toggle-container">
-      <button @click="filterHero('Carry')" class="role-toggle-button px-2 m-2">
-        Carry
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Nuker
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Initiator
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Disabler
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Durable
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Escape
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Support
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Pusher
-      </button>
-      <button
-        @click="myToggleFunction($event)"
-        class="role-toggle-button px-2 m-2"
-      >
-        Jungler
-      </button>
     </div>
 
-    <div class="mt-2">Value: {{ text }}</div>
     <div class="card-section">
-      <div v-for="hero in listHero" v-bind:key="hero.id">
+      <div v-for="hero in filteredHero" v-bind:key="hero.id">
         <div>
           <b-card>
             <img
@@ -163,7 +109,13 @@
           v-for="heroPlayer in listHeroPlayer"
           v-bind:key="heroPlayer.account_id"
         >
-          <td>{{ heroPlayer.account_id }}</td>
+          <td>
+            <a
+              class="linkMatch"
+              @click="getPlayerDetail(heroPlayer.account_id)"
+              >{{ heroPlayer.account_id }}</a
+            >
+          </td>
           <td>{{ heroPlayer.games_played }}</td>
           <td>{{ heroPlayer.wins }}</td>
         </tr>
@@ -192,26 +144,30 @@
           <th>Result</th>
         </tr>
         <tr v-for="heroMatch in listHeroMatch" :key="heroMatch.match_id">
-          <td>
-            <a @click="getMatchDetail(heroMatch.match_id)" href="">{{
-              heroMatch.match_id
-            }}</a>
+          <td class="linkMatchContainer">
+            <a class="linkMatch" @click="getMatchDetail(heroMatch.match_id)"
+              ><p class="linkText">{{ heroMatch.match_id }}</p></a
+            >
           </td>
           <td>{{ heroMatch.league_name }}</td>
-          <td>{{ heroMatch.duration }}</td>
+          <td>
+            {{ durationToMinute(heroMatch.duration) }}
+          </td>
           <td>
             <span
               class="jarak"
               v-if="heroMatch.radiant_win == true && heroMatch.radiant == true"
-              >Win</span
+              ><img class="win-img" src="@/assets/wingreen.png" alt="" /></span
             ><span
               class="jarak"
               v-else-if="
                 heroMatch.radiant_win == false && heroMatch.radiant == false
               "
-              >Win</span
-            >
-            <span class="jarak" v-else>Lose</span>
+              ><img class="win-img" src="@/assets/wingreen.png" alt=""
+            /></span>
+            <span class="jarak" v-else
+              ><img class="lose-img" src="@/assets/LoseRed.png" alt=""
+            /></span>
           </td>
         </tr>
       </div>
@@ -233,19 +189,31 @@ export default {
   components: {},
   data() {
     return {
+      search: "",
       listHeroPlayer: undefined,
       listHeroMatch: undefined,
-      listHero: undefined,
+      listHero: [],
       isActive: false,
       matchDetail: undefined,
       matchDetailId: undefined,
+      role: "",
+      isFiltering: false,
+      roleFilter: [],
+      playerDetailId: undefined,
+      playerDetail: undefined,
     };
   },
 
   methods: {
-    myToggleFunction: function (event) {
+    myToggleFunction: function (event, val) {
+      this.getRole(val);
       let button = event.target;
       button.classList.toggle("active");
+    },
+    getRole(val) {
+      this.isFiltering = true;
+      this.role = val;
+      this.roleFilter.push(this.role);
     },
     filterHero(role) {
       let newListHero = this.listHero.filter((hero) => {
@@ -280,9 +248,20 @@ export default {
         params: { id: this.matchDetailId },
       });
     },
+    async getPlayerDetail(playerId) {
+      this.getPlayerId(playerId);
+
+      this.$router.push({
+        name: "/player-detail",
+        params: { id: this.playerDetailId },
+      });
+    },
     getMatchId(matchId) {
       this.matchDetailId = matchId.toString();
       console.log(this.matchDetailId);
+    },
+    getPlayerId(playerId) {
+      this.playerDetailId = playerId.toString();
     },
     compare(a, b) {
       if (a.localized_name < b.localized_name) {
@@ -293,17 +272,27 @@ export default {
       }
       return 0;
     },
+    durationToMinute(duration) {
+      let newDuration = parseInt(duration) / 60;
+      return Math.floor(newDuration) + ":" + (duration % 60);
+    },
   },
   computed: {
-    getImageUrl(heroId) {
-      let url = "https://api.opendota.com" + heroId;
-      return url;
+    filteredHero: function () {
+      if (this.isFiltering == true) {
+        return this.listHero.filter((hero) => {
+          return hero.roles.includes(this.role);
+        });
+      } else {
+        return this.listHero.filter((hero) => {
+          let newName = hero.name.substring(14);
+          return newName.match(this.search.toLowerCase());
+        });
+      }
     },
-    //  filteredHero(){
-    //    return this.listHero.roles
-    // .filter((hero)=>{
-    //  return hero.title.match(this.filterName);
-    // }
+    // filteredRole: function () {
+
+    // },
   },
 
   mounted() {
@@ -432,7 +421,27 @@ ul {
   position: relative;
   margin-left: -100px;
 }
-
+.linkMatch {
+  color: rgb(0, 200, 255);
+  padding: 15px;
+  transition: 0.1s;
+}
+.linkMatch:hover {
+  color: rgb(118, 181, 240);
+  text-decoration: none;
+  cursor: pointer;
+}
+.linkText:hover {
+  transform: scale(1.2);
+}
+.win-img {
+  width: 50px;
+  height: 50px;
+}
+.lose-img {
+  width: 50px;
+  height: 50px;
+}
 li {
   color: black;
 }
@@ -440,5 +449,7 @@ tr,
 th,
 td {
   border: 2px solid;
+  margin: 15px;
+  padding: 15px;
 }
 </style>
