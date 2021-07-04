@@ -84,7 +84,7 @@ body{
 }
 .photo-profile {
   position: relative;
-
-  transform: translateY(-72px) translateX(500px) scale(1.3);
+  margin-bottom: 100px;
+  transform: translateY(-72px) translateX(700px) scale(1.5);
 }
 </style>

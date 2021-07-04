@@ -1,17 +1,5 @@
 <template>
   <div>
-    <!-- <button @click="filterPlayer('0')" class="leaderboard-region-button">
-      America
-    </button>
-    <button @click="filterPlayer('1')" class="leaderboard-region-button">
-      SE Asia
-    </button>
-    <button @click="filterPlayer('2')" class="leaderboard-region-button">
-      Europe
-    </button>
-    <button @click="filterPlayer('3')" class="leaderboard-region-button">
-      China
-    </button> -->
     <div>
       <b-tabs
         v-model="tabIndex"
@@ -135,5 +123,15 @@ td {
   display: block;
   align-items: center;
   transform: translateX(290px);
+}
+th {
+  background-color: aqua;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+td {
+  color: white;
+  background-color: #172536;
 }
 </style>

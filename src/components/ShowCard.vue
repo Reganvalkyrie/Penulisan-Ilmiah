@@ -21,7 +21,7 @@
             <b-card-text style="height: 140px">
               <ul>
                 <li class="hero-card-name">{{ hero.localized_name }}</li>
-                <!-- <li>{{ hero.roles }}</li> -->
+
                 <li class="role-container">
                   <div class="inline" v-for="role in hero.roles" :key="role">
                     <p v-if="role == 'Carry'" class="hero-role carry">
@@ -78,14 +78,14 @@
             <b-button
               id="show-btn"
               @click="showMatchModal(hero.id)"
-              class="mt-5 px-3 py-1 rounded-pill"
+              class="mt-5 px-3 py-1 rounded-pill modal-button"
               variant="danger"
               >Find Match</b-button
             >
             <b-button
               id="show-btn"
               @click="showPlayerModal(hero.id)"
-              class="mt-5 mx-2 px-3 py-1 rounded-pill"
+              class="mt-5 mx-2 px-3 py-1 rounded-pill modal-button"
               variant="danger"
               >Find Top Player</b-button
             >
@@ -97,9 +97,11 @@
       ref="player-modal"
       size="md"
       hide-footer
-      title="Using Component Methods"
+      title="Top Player of This Hero"
+      body-bg-variant="dark"
+      header-bg-variant="warning"
     >
-      <div class="player-modal-style d-block text-center">
+      <div class="text-light player-modal-style d-block text-center">
         <tr>
           <th>Player Id</th>
           <th>Matches</th>
@@ -331,6 +333,9 @@ export default {
 }
 .active {
   background-color: aqua;
+}
+.modal-button:hover {
+  transform: scale(1.1);
 }
 .hero-card-name {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;

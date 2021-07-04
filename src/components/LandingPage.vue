@@ -6,11 +6,15 @@
     </div>
     <div class="body-content">
       <p>
-        Tools for analysis gameplay<br />
+        Tools for finding useful gameplay<br />
         Find Pro Match and get better
       </p>
 
-      <p></p>
+      <div class="get-started">
+        <router-link to="/heroes">
+          <h3 class="h3">Get Started</h3>
+        </router-link>
+      </div>
     </div>
     <img class="responsive" src="@/assets/sf.jpg" alt="home-image" />
   </div>
@@ -30,6 +34,26 @@ h1 {
 p {
   color: #000;
   font-size: 30px;
+}
+.get-started {
+  border: 2px solid;
+  border-radius: 30%;
+  width: 180px;
+  background: #000;
+  color: red;
+}
+.get-started:hover {
+  text-decoration: none;
+}
+h3 {
+  color: white;
+  padding: 5px;
+  margin-left: 6px;
+  word-wrap: normal;
+}
+h3:hover {
+  text-decoration: none;
+  cursor: pointer;
 }
 strong {
   background: linear-gradient(to right, rgb(44, 7, 7), red);

@@ -199,7 +199,7 @@ export default {
       });
     },
   },
-  computed: {},
+
   async mounted() {
     const res = await axios.get(
       `https://api.opendota.com/api/players/${this.playerId}/recentMatches`

@@ -377,6 +377,8 @@ td {
 }
 th {
   background-color: aqua;
+
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
 }
 tr:hover {
   background-color: rgba(126, 120, 93, 0.533);
