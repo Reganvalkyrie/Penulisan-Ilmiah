@@ -159,16 +159,16 @@
             <span
               class="jarak"
               v-if="heroMatch.radiant_win == true && heroMatch.radiant == true"
-              ><img class="win-img" src="@/assets/wingreen.png" alt="" /></span
+              ><img class="lose-img" src="@/assets/LoseRed.png" alt="" /></span
             ><span
               class="jarak"
               v-else-if="
                 heroMatch.radiant_win == false && heroMatch.radiant == false
               "
-              ><img class="win-img" src="@/assets/wingreen.png" alt=""
+              ><img class="lose-img" src="@/assets/LoseRed.png" alt=""
             /></span>
             <span class="jarak" v-else
-              ><img class="lose-img" src="@/assets/LoseRed.png" alt=""
+              ><img class="win-img" src="@/assets/wingreen.png" alt=""
             /></span>
           </td>
         </tr>
