@@ -19,8 +19,8 @@
           Website in dibuat dengan menggunakan API dari:
           <ul>
             <li> <a href="https://docs.opendota.com/">OpenDota</a></li>
-            <li> 
-          <a href="https://docs.stratz.com/index.html">Stratz</a></li>
+            <!-- <li> 
+          <a href="https://docs.stratz.com/index.html">Stratz</a></li> -->
           </ul>
         
         </p>
